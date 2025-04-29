@@ -1,0 +1,171 @@
+tax estimatation
+def calculate_tax(income, deductions, regime="new"):
+    if regime == "old":
+        taxable_income = income - deductions
+        # apply slab rates
+    else:
+        # no deductions, apply new slab rates
+    return estimated_tax
+
+basic mongo db models
+// User.js
+{
+  name: String,
+  email: String,
+  phone: String,
+  preferences: {
+    regime: "old" | "new"
+  }
+}
+
+// Transaction.js
+{
+  userId: ObjectId,
+  type: "income" | "expense",
+  amount: Number,
+  category: String,
+  date: Date,
+  paymentMode: String,
+  tagForTaxClaim: Boolean
+}
+
+tax estimation (node js version)
+// TaxProfile.js
+{
+  userId: ObjectId,
+  salary: Number,
+  deductions: {
+    section80C: Number,
+    section80D: Number,
+    hra: Number,
+  },
+  preferredRegime: String
+}
+
+function calculateTax(income, deductions = {}, regime = "new") {
+  const slabs = {
+    new: [
+      [0, 250000, 0],
+      [250001, 500000, 0.05],
+      [500001, 750000, 0.10],
+      [750001, 1000000, 0.15],
+      [1000001, 1250000, 0.20],
+      [1250001, 1500000, 0.25],
+      [1500001, Infinity, 0.30],
+    ],
+    old: [
+      [0, 250000, 0],
+      [250001, 500000, 0.05],
+      [500001, 1000000, 0.20],
+      [1000001, Infinity, 0.30],
+    ]
+  };
+
+  let taxable = regime === "old"
+    ? income - Object.values(deductions).reduce((a, b) => a + b, 0)
+    : income;
+
+  let tax = 0;
+  for (let [min, max, rate] of slabs[regime]) {
+    if (taxable > min) {
+      tax += Math.min(taxable, max) - min * rate;
+    }
+  }
+  return Math.round(tax);
+}
+
+for an ai api
+User input: "I earn ₹70,000/month, how much tax will I pay?"
+Extracted: income = 8,40,000
+Estimated tax = ₹21,000 (new regime)
+Formatted reply: "Based on your salary of ₹70,000 per month, your estimated tax under new regime is ₹21,000.
+"
+
+// Backend structure for Apka Dhan (Node.js + Express)
+
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/apka_dhan', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
+
+// User Model
+const UserSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  phone: String,
+  preferences: {
+    regime: String
+  }
+});
+const User = mongoose.model('User', UserSchema);
+
+// Transaction Model
+const TransactionSchema = new mongoose.Schema({
+  userId: mongoose.Schema.Types.ObjectId,
+  type: String,
+  amount: Number,
+  category: String,
+  date: Date,
+  paymentMode: String,
+  tagForTaxClaim: Boolean
+});
+const Transaction = mongoose.model('Transaction', TransactionSchema);
+
+// Tax Estimator Logic
+function calculateTax(income, deductions = {}, regime = "new") {
+  const slabs = {
+    new: [
+      [0, 250000, 0],
+      [250001, 500000, 0.05],
+      [500001, 750000, 0.10],
+      [750001, 1000000, 0.15],
+      [1000001, 1250000, 0.20],
+      [1250001, 1500000, 0.25],
+      [1500001, Infinity, 0.30],
+    ],
+    old: [
+      [0, 250000, 0],
+      [250001, 500000, 0.05],
+      [500001, 1000000, 0.20],
+      [1000001, Infinity, 0.30],
+    ]
+  };
+
+  let taxable = regime === "old"
+    ? income - Object.values(deductions).reduce((a, b) => a + b, 0)
+    : income;
+
+  let tax = 0;
+  for (let [min, max, rate] of slabs[regime]) {
+    if (taxable > min) {
+      tax += (Math.min(taxable, max) - min) * rate;
+    }
+  }
+  return Math.round(tax);
+}
+
+// Tax Route
+app.post('/api/calculate-tax', (req, res) => {
+  const { income, deductions, regime } = req.body;
+  const tax = calculateTax(income, deductions, regime);
+  res.json({ estimatedTax: tax });
+});
+
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+
+
