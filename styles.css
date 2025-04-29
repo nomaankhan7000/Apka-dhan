@@ -1,0 +1,67 @@
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0d1117;
+  color: #e6edf3;
+}
+header {
+  text-align: center;
+  padding: 50px 20px;
+}
+header h1 {
+  font-size: 3em;
+  color: #58a6ff;
+}
+section {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+.feature {
+  background: #161b22;
+  padding: 20px;
+  border-radius: 10px;
+}
+.waitlist {
+  background: #161b22;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 40px;
+}
+input[type="email"] {
+  padding: 10px;
+  width: 80%;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+}
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #238636;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+footer {
+  text-align: center;
+  margin: 50px 0 20px;
+  font-size: 0.9em;
+  color: #8b949e;
+}
+.mockup {
+  text-align: center;
+  margin-top: 30px;
+}
+.mockup img {
+  max-width: 300px;
+  border-radius: 10px;
+  border: 2px solid #30363d;
+}
